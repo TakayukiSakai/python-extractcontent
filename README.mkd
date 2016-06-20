@@ -1,3 +1,7 @@
+# このレポジトリについて
+
+https://github.com/petitviolet/python-extractcontent のコードをpython3対応したものです。
+
 # ExtractContent
 
 ExtractContentはHTMLから本文を抽出するモジュールです。

@@ -2,6 +2,7 @@
 # -*- encoding:utf-8 -*-
 import re
 import unicodedata
+from functools import reduce
 
 
 class ExtractContent(object):
@@ -175,11 +176,9 @@ class ExtractContent(object):
     # Eliminates useless tags
     def _eliminate_useless_tags(self, html):
         # Eliminate useless symbols
-        html = html.encode('utf-8')
         html = re.sub((r"\342(?:\200[\230-\235]|\206[\220-\223]|"
                        r"\226[\240-\275]|\227[\206-\257]|\230[\205\206])"),
                 "", html)
-        html = html.decode('utf-8')
         # Eliminate useless html tags
         html = \
             re.sub(r"(?is)<(script|style|select|noscript)[^>]*>.*?</\1\s*>",
@@ -237,14 +236,9 @@ class ExtractContent(object):
     # Strips tags from html.
     def _strip_tags(self, html):
         st = re.sub(r"(?s)<.+?>", "", html)
-        # Convert from wide character to ascii
-        if st and type(st) != str:
-            st = unicodedata.normalize("NFKC", st)
-            st = st.encode('utf-8')
         st = re.sub(r'\342[\224\225][\200-\277]', '', st)  # keisen
         st = re.sub(r"&(.*?);", lambda x: self.CHARREF.get(x.group(1),
             x.group()), st)
-        st = st.decode('utf-8')
         st = re.sub(r"[ \t]+", " ", st)
         st = re.sub(r"\n\s*", "\n", st)
         return st
